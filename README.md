@@ -17,7 +17,10 @@ Built while following the Udemy course [Java Spring AI](https://www.udemy.com/co
 | Tool              | Parameters                            | Description                                    |
 |-------------------|---------------------------------------|------------------------------------------------|
 | `createTicket`    | `issue`, `username`                   | Creates a support ticket                       |
-| `getTicketStatus` | `username`                            | Returns all tickets belonging to the given user |
+| `getTicketStatus` | `username`                            | Returns all tickets belonging to the given user, reporting progress notifications while it works |
+| `summarizeTickets` | `username`                           | Returns a short natural-language summary of the user's tickets, generated through MCP sampling |
+
+`summarizeTickets` uses MCP **sampling**: the server has no LLM of its own and asks the connected client to run the completion (`ctx.sample(...)`). If the client does not advertise the sampling capability, the tool falls back to returning the raw ticket data.
 
 Tickets are stored in the `helpdesk_tickets` table (`id`, `username`, `issue`, `status`, `createdAt`, `eta`).
 
