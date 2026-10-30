@@ -33,12 +33,18 @@ public class HelpDeskTools {
     @McpTool(name="getTicketStatus", description = "Fetch the status of the tickets based on a given username")
     List<HelpDeskTicket> getTicketStatus(@McpToolParam(description =
             "Username to fetch the status of the help desk tickets") String username,
-                                         McpSyncRequestContext context) {
+                                         McpSyncRequestContext context) throws InterruptedException {
         LOGGER.info("Fetching tickets for user: {}", username);
         context.info("Fetching tickets for user: " + username);
         List<HelpDeskTicket> tickets =  service.getTicketsByUsername(username);
         LOGGER.info("Found {} tickets for user: {}", tickets.size(), username);
         context.info("Found " + tickets.size() + " tickets for user: " + username);
+        for (int i = 0; i < 10; i++) {
+            Thread.sleep(1000);
+            int percent = (i * 100) / 10;
+            context.progress(spec -> spec.progress(percent)
+                    .message("Fetching tickets for user: " + username + " - " + percent + "% complete"));
+        }
         return tickets;
     }
 
